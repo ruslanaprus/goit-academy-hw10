@@ -15,6 +15,19 @@ public class NumberHandler {
     private NumberHandler(String filePath) {
         this.filePath = filePath;
         numbers = new ArrayList<>();
+        loadNumbersFromFile();
+    }
+
+    public static NumberHandler getInstance(String filePath) {
+        if (instance == null) {
+            synchronized (NumberHandler.class) {
+                instance = new NumberHandler(filePath);
+            }
+        }
+        return instance;
+    }
+
+    private synchronized void loadNumbersFromFile() {
 
         try {
             Path path = Paths.get(filePath);
@@ -30,15 +43,8 @@ public class NumberHandler {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error loading numbers from file", e);
         }
-    }
-
-    public static synchronized NumberHandler getInstance(String filePath) {
-        if (instance == null) {
-            instance = new NumberHandler(filePath);
-        }
-        return instance;
     }
 
     public static List<String> readValidPhoneNumbers(String filePath) {
@@ -51,12 +57,18 @@ public class NumberHandler {
                     iterator.remove();
                 }
             }
-            System.out.println(lines);
             return new ArrayList<>(lines);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return Collections.emptyList();
+    }
+
+    public void printValidPhoneNumbers() {
+        List<String> validNumbers = readValidPhoneNumbers(this.filePath);
+        for (String number : validNumbers) {
+            System.out.println(number);
+        }
     }
 
     public void addValidPhoneNumber(String number) throws InvalidPhoneNumberException {
