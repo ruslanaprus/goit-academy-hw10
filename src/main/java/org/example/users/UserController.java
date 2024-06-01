@@ -3,6 +3,7 @@ package org.example.users;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +20,16 @@ public class UserController {
         try {
             List<User> users = readUsersFromFile(filePath);
             UserController.convertToJson(users);
+            writeJsonToFile(users, "/Users/ruslanaprus/IdeaProjects/goit-academy-hw10/src/main/resources/user.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeJsonToFile(List<User> users, String fileName) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter(fileName)) {
+            gson.toJson(users, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
