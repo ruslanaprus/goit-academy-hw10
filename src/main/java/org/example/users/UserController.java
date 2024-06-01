@@ -18,27 +18,10 @@ public class UserController {
 
         try {
             List<User> users = readUsersFromFile(filePath);
-            for (User user : users) {
-                System.out.println(user.getName() + " " + user.getAge());
-            }
+            UserController.convertToJson(users);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        try {
-            List<User> users = readUsersFromFile(filePath);
-            for (User user : users) {
-                System.out.println(user.getName() + " " + user.getAge());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        User newUser = new User("kitten", 1);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonNew = gson.toJson(newUser);
-        System.out.println("" + jsonNew);
-
     }
 
     public static byte[] readUsersFromFileAsBytes(Path filePath) throws IOException {
@@ -47,7 +30,7 @@ public class UserController {
 
     public static List<User> readUsersFromFile(Path filePath) throws IOException {
         byte[] fileBytes = readUsersFromFileAsBytes(filePath);
-        String fileContent = new String(fileBytes); // Convert bytes to string
+        String fileContent = new String(fileBytes);
 
         String[] lines = fileContent.split("\\r?\\n");
 
@@ -67,7 +50,9 @@ public class UserController {
 
     public static void convertToJson(List<User> users) {
         for (User user : users) {
-            System.out.println(user.getName() + " " + user.getAge());
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonNew = gson.toJson(user);
+            System.out.println("" + jsonNew);
         }
     }
 }
