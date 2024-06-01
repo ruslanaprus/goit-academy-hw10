@@ -9,20 +9,17 @@ import java.util.List;
 
 public class NumberHandler {
 
-    private static final String FILE_PATH = "/Users/ruslanaprus/IdeaProjects/goit-academy-hw10/src/main/resources/file.txt";
+//    private static final String FILE_PATH = "/Users/ruslanaprus/IdeaProjects/goit-academy-hw10/src/main/resources/file.txt";
+    private static NumberHandler instance;
+    private String filePath;
     private List<String> numbers;
 
-    private static final NumberHandler instance = new NumberHandler();
-
-    public static NumberHandler getInstance() {
-        return instance;
-    }
-
-    private NumberHandler() {
+    private NumberHandler(String filePath) {
+        this.filePath = filePath;
         numbers = new ArrayList<>();
 
         try {
-            Path path = Paths.get(FILE_PATH);
+            Path path = Paths.get(filePath);
             if (!Files.exists(path)) {
                 Files.createFile(path);
             }
@@ -37,6 +34,13 @@ public class NumberHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static synchronized NumberHandler getInstance(String filePath) {
+        if (instance == null) {
+            instance = new NumberHandler(filePath);
+        }
+        return instance;
     }
 
     public static void readFile(String filePath) {
@@ -63,13 +67,15 @@ public class NumberHandler {
 
     private void saveNumbers() {
         try {
-            Files.write(Paths.get(FILE_PATH), numbers);
+            Files.write(Paths.get(filePath), numbers);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public List<String> getNumbers() {
-        return new ArrayList<>(numbers);
+        System.out.println("nums" + numbers);
+//        return new ArrayList<>(numbers);
+        return numbers;
     }
 }

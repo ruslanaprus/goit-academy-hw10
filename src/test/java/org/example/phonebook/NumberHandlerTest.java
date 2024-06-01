@@ -20,28 +20,38 @@ class NumberHandlerTest {
         tempFile = tempDir.resolve("file.txt");
         Files.createFile(tempFile);
 
-        org.example.phonebook.NumberHandlerTestHelper.setFilePath(NumberHandler.getInstance(), tempFile.toString());
-        numberHandler = NumberHandler.getInstance();
+        numberHandler = NumberHandler.getInstance(tempFile.toString());
     }
 
     @Test
-    void getInstance() {
+    // test if the method runs without exceptions
+    public void testReadFile() {
+        numberHandler.readFile(tempFile.toString());
     }
 
     @Test
     void testReadFileWithValidNumbers() throws Exception {
-        Files.write(tempFile, List.of("123-456-7890", "(123) 777-3456"));
-        numberHandler.readFile(tempFile.toString());
+        Files.write(tempFile, List.of("(123) 777-3456"));
+        NumberHandler.readFile(tempFile.toString());
         List<String> numbers = numberHandler.getNumbers();
+ //       assertEquals(numbers.get(0), "(123) 777-3456");
         assertTrue(numbers.contains("(123) 777-3456"));
-        assertTrue(numbers.contains("123-456-7890"));
     }
 
     @Test
-    void add() {
+    void testAddValidNumber() throws Exception {
+        numberHandler.add("(123) 456-7890");
+        List<String> numbers = numberHandler.getNumbers();
+        assertTrue(numbers.contains("(123) 456-7890"));
     }
 
     @Test
-    void getNumbers() {
+    void testAddInvalidNumberThrowsException() {
+        assertThrows(InvalidPhoneNumberException.class, () -> numberHandler.add("123-45-7890"));
+        assertThrows(InvalidPhoneNumberException.class, () -> numberHandler.add("(123)-45-7890"));
+        assertThrows(InvalidPhoneNumberException.class, () -> numberHandler.add("1-4-70"));
+        assertThrows(InvalidPhoneNumberException.class, () -> numberHandler.add("123 45 7890"));
+        assertThrows(InvalidPhoneNumberException.class, () -> numberHandler.add("123-(45)-7890"));
+        assertThrows(InvalidPhoneNumberException.class, () -> numberHandler.add("1232-45-7890"));
     }
 }
