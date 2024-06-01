@@ -4,12 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
 
 public class NumberHandler {
-
-//    private static final String FILE_PATH = "/Users/ruslanaprus/IdeaProjects/goit-academy-hw10/src/main/resources/file.txt";
     private static NumberHandler instance;
     private String filePath;
     private List<String> numbers;
@@ -43,39 +41,42 @@ public class NumberHandler {
         return instance;
     }
 
-    public static void readFile(String filePath) {
+    public static List<String> readValidPhoneNumbers(String filePath) {
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
-            for (String line : lines) {
-                if (NumberValidator.isValid(line.trim())) {
-                    System.out.println(line.trim());
+            Iterator<String> iterator = lines.iterator();
+            while (iterator.hasNext()) {
+                String line = iterator.next().trim();
+                if (!NumberValidator.isValid(line)) {
+                    iterator.remove();
                 }
             }
+            System.out.println(lines);
+            return new ArrayList<>(lines);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return Collections.emptyList();
     }
 
-    public void add(String number) throws InvalidPhoneNumberException {
+    public void addValidPhoneNumber(String number) throws InvalidPhoneNumberException {
         if (NumberValidator.isValid(number)) {
             numbers.add(number);
-            saveNumbers();
+            saveNumber();
         } else {
             throw new InvalidPhoneNumberException("Invalid phone number: " + number);
         }
     }
 
-    private void saveNumbers() {
+    private void saveNumber() {
         try {
-            Files.write(Paths.get(filePath), numbers);
+            Files.write(Paths.get(filePath), numbers, StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public List<String> getNumbers() {
-        System.out.println("nums" + numbers);
-//        return new ArrayList<>(numbers);
-        return numbers;
+        return new ArrayList<>(numbers);
     }
 }
