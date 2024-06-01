@@ -21,7 +21,7 @@ class NumberHandlerTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        String filePath = "/Users/ruslanaprus/IdeaProjects/goit-academy-hw10/src/main/resources/phoneNumbers.txt";
+        String filePath = "src/main/resources/phoneNumbers.txt";
         numberHandler = NumberHandler.getInstance(filePath);
         tempFile = Path.of(filePath);
         originalContent = Files.readString(tempFile);
