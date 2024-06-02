@@ -84,7 +84,6 @@ journey 2
 keen 2
 known 2
 landscape 2
-life 2
 light 2
 meant 2
 mist 2
@@ -285,6 +284,8 @@ leaves 1
 led 1
 less 1
 let’s 1
+life 1
+life's 1
 like 1
 little 1
 lived 1
@@ -362,7 +363,6 @@ rooftops 1
 roots 1
 rose 1
 runes 1
-s 1
 satisfaction 1
 scent 1
 sensed 1

@@ -15,29 +15,37 @@ public class WordFrequencyCounter {
     public static void main(String[] args) throws IOException {
         String filePath = "src/main/resources/words.txt";
         String frequencyFilePath = "src/main/resources/word_frequency.txt";
-        Map<String, Integer> frequencyMap = calculateWordFrequencyFromFile(filePath);
+        List<String> words = readWordsFromFile(filePath);
+        Map<String, Integer> frequencyMap = calculateWordFrequency(words);
         writeResultsToFile(sortByFrequency(frequencyMap), frequencyFilePath);
     }
 
-    protected static Map<String, Integer> calculateWordFrequencyFromFile(String filePath) {
+    protected static List<String> readWordsFromFile(String filePath) {
         Path path = Path.of(filePath);
-        Map<String, Integer> wordFrequencyMap = new TreeMap<>();
+        List<String> words = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            final Pattern MATCH_ALL_WORDS = Pattern.compile("([\\w-’]+)");
+            final Pattern MATCH_ALL_WORDS = Pattern.compile("([\\w-’']+)");
             String line;
             while ((line = reader.readLine()) != null) {
                 Matcher matcher = MATCH_ALL_WORDS.matcher(line.toLowerCase());
                 while (matcher.find()) {
-                    String word = matcher.group();
-                    wordFrequencyMap.put(word, wordFrequencyMap.getOrDefault(word, 0) + 1);
+                    words.add(matcher.group());
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return wordFrequencyMap;
+        return words;
 
+    }
+
+    protected static Map<String, Integer> calculateWordFrequency(List<String> words) {
+        Map<String, Integer> wordFrequencyMap = new TreeMap<>();
+        for (String word : words) {
+            wordFrequencyMap.put(word, wordFrequencyMap.getOrDefault(word, 0) + 1);
+        }
+        return wordFrequencyMap;
     }
 
     protected static void writeResultsToFile(Map<String, Integer> wordFrequencyMap, String filePath) {
@@ -53,7 +61,7 @@ public class WordFrequencyCounter {
         }
     }
 
-    private static Map<String, Integer> sortByFrequency(Map<String, Integer> wordCounts) {
+    protected static Map<String, Integer> sortByFrequency(Map<String, Integer> wordCounts) {
         List<Map.Entry<String, Integer>> entries = new ArrayList<>(wordCounts.entrySet());
         Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
             @Override
