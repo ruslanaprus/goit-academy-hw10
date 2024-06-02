@@ -3,12 +3,14 @@ package org.example.users;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UserController {
@@ -25,12 +27,20 @@ public class UserController {
         }
     }
 
-    private static void writeJsonToFile(List<User> users, String fileName) {
+    protected static void writeJsonToFile(List<User> users, String fileName) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter(fileName)) {
             gson.toJson(users, writer);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    protected static List<User> readJsonFromFile(String fileName) throws IOException {
+        Gson gson = new Gson();
+        try (FileReader reader = new FileReader(fileName)) {
+            User[] usersArray = gson.fromJson(reader, User[].class);
+            return Arrays.asList(usersArray);
         }
     }
 

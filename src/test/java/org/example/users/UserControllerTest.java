@@ -1,7 +1,5 @@
 package org.example.users;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -18,7 +16,7 @@ class UserControllerTest {
 
     @Test
     public void testReadUsersFromFile_Success() throws IOException {
-        Path file = Paths.get("src/test/java/org/example/users/users_example.txt");
+        Path file = Paths.get("src/test/java/org/example/users/testfiles/users_example.txt");
         Files.write(file, Arrays.asList("Name Age ", "Peach 2", "Whiskers 3"));
 
         List<User> expected = Arrays.asList(new User("Peach", 2), new User("Whiskers", 3));
@@ -29,7 +27,7 @@ class UserControllerTest {
 
     @Test
     public void testReadUsersFromFile_EmptyFile() throws IOException {
-        Path file = Paths.get("src/test/java/org/example/users/users_empty.txt");
+        Path file = Paths.get("src/test/java/org/example/users/testfiles/users_empty.txt");
         Files.write(file, Arrays.asList("Name Age"));
 
         List<User> expected = Arrays.asList();
@@ -40,7 +38,7 @@ class UserControllerTest {
 
     @Test
     public void testReadUsersFromFile_IncorrectFormat() throws IOException {
-        Path file = Paths.get("src/test/java/org/example/users/users_incorrect.txt");
+        Path file = Paths.get("src/test/java/org/example/users/testfiles/users_incorrect.txt");
         Files.write(file, Arrays.asList("Name Age", "Pawsters Thirty", "Purrito 5"));
 
         NumberFormatException exception = assertThrows(NumberFormatException.class, () -> readUsersFromFile(file));
@@ -49,7 +47,7 @@ class UserControllerTest {
 
     @Test
     public void testReadUsersFromFile_MissingValues() throws IOException {
-        Path file = Paths.get("src/test/java/org/example/users/users_missing_value.txt");
+        Path file = Paths.get("src/test/java/org/example/users/testfiles/users_missing_value.txt");
         Files.write(file, Arrays.asList("Name Age", "Peach"));
 
         ArrayIndexOutOfBoundsException exception = assertThrows(ArrayIndexOutOfBoundsException.class, () -> readUsersFromFile(file));
@@ -58,12 +56,36 @@ class UserControllerTest {
 
     @Test
     public void testReadUsersFromFile_HeaderOnly() throws IOException {
-        Path file = Paths.get("src/test/java/org/example/users/users_header_only.txt");
+        Path file = Paths.get("src/test/java/org/example/users/testfiles/users_header_only.txt");
         Files.write(file, Arrays.asList("Name Age"));
 
         List<User> expected = Arrays.asList();
         List<User> actual = readUsersFromFile(file);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testWriteJsonToFile_Success() throws IOException {
+        List<User> users = Arrays.asList(new User("Peach", 2), new User("Meowskers", 2));
+        Path file = Paths.get("src/test/java/org/example/users/testfiles/users.json");
+
+        UserController.writeJsonToFile(users, file.toString());
+
+        List<User> actual = UserController.readJsonFromFile(file.toString());
+
+        assertEquals(users, actual);
+    }
+
+    @Test
+    public void testWriteJsonToFile_EmptyList() throws IOException {
+        List<User> users = Arrays.asList();
+        Path file = Paths.get("src/test/java/org/example/users/testfiles/empty_users.json");
+
+        UserController.writeJsonToFile(users, file.toString());
+
+        List<User> actual = UserController.readJsonFromFile(file.toString());
+
+        assertTrue(actual.isEmpty());
     }
 }
