@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.example"},{"l":"org.example.phonebook"},{"l":"org.example.users"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.example"},{"l":"org.example.phonebook"},{"l":"org.example.users"},{"l":"org.example.wordcounter"}];updateSearchResults();
