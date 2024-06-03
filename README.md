@@ -23,13 +23,13 @@ This package contains classes related to phone book functionality. The classes p
 
 - **Validation:** Ensures phone numbers conform to specific patterns.
 - **File Operations:** Read from and write to phone book files.
-- **Utilities:** Helper methods for phone number processing.
+- **Resource Sharing:** Using singleton pattern ensures that there's only one copy of list of phone numbers and that file operations are coordinated properly.
 
-### 2. User Data Management (task 2)
+### 2. User Data Controller (task 2)
 
 **Package:** `org.example.users`
 
-This package provides functionality to manage user data. It includes the ability to:
+This package provides functionality to manage user data. It uses Google's Gson library for JSON processing and Java NIO for file operations. It includes the ability to:
 
 - Read user data from text files.
 - Convert user data to JSON format.
@@ -37,15 +37,15 @@ This package provides functionality to manage user data. It includes the ability
 
 **Key Features:**
 
-- **Format Conversion:** Seamlessly convert between text and JSON formats.
+- **Format Conversion:** Convert between text and JSON formats.
 - **File Operations:** Handle user data files efficiently.
-- **Data Management:** Robust methods for user data processing.
 
 ### 3. Word Frequency Analysis (task 3)
 
 **Package:** `org.example.wordcounter`
 
-This package contains classes for performing word frequency analysis on text files. It provides functionality to:
+This package contains classes for performing word frequency analysis on .txt files. It processes long text files efficiently, making it suitable for analyzing large documents.
+It provides functionality to:
 
 - Read words from a file.
 - Calculate the frequency of each word.
@@ -54,9 +54,9 @@ This package contains classes for performing word frequency analysis on text fil
 
 **Key Features:**
 
-- **Frequency Calculation:** Accurately count word occurrences.
-- **Sorting:** Organize words based on their frequency.
-- **Output:** Generate files with word frequency data.
+- **Frequency Calculation:** Accurately count word occurrences. Frequency count is case-insensitive
+- **Sorting:** The calculated word frequencies are stored in a TreeMap for natural ordering by keys. Words can be organized based on their frequency.
+- **Output:** Generate file with word frequency data.
 
 ## Getting Started
 
@@ -84,7 +84,7 @@ You do not need to manually install these dependencies; Maven will handle them f
 
 ## Usage
 
-### Usage Example
+### `phonebook` Usage Example
 
 ```java
 // Create an instance of NumberHandler
@@ -99,3 +99,33 @@ try {
 } catch (InvalidPhoneNumberException e) {
     System.err.println(e.getMessage());
 }
+```
+
+### `users` Usage Example
+
+```java
+try {
+// Read user data from a text file and add it to the list   
+    List<User> users = readUsersFromFile("path/to/input.txt");
+    
+// Convert user data to JSON format and write it in the file
+    writeJsonToFile(users, "path/to/output.json");
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+### `wordcounter` Usage Example
+
+```java
+// Read text from the file
+List<String> words = readWordsFromFile("path/to/words.txt");
+
+// Calculate frequency of each word from the text
+Map<String, Integer> frequencyMap = calculateWordFrequency(words);
+
+// Sort the list of words by frequency in descending order and write result in the file
+writeResultsToFile(sortByFrequency(frequencyMap), "path/to/frequency_output.txt");
+```
+
+
