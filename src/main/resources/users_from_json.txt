@@ -1,4 +1,3 @@
-name age
 alice 21
 bob 42
 charlie 17
@@ -10,3 +9,4 @@ heidi 42
 ivan 32
 judy 16
 mark 31
+mark 32

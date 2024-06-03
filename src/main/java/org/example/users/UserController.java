@@ -33,6 +33,7 @@ public class UserController {
         try {
             List<User> users = readUsersFromFile(filePath);
             writeJsonToFile(users, "src/main/resources/user.json");
+            writeUserToFile("src/main/resources/user.json", "src/main/resources/users_from_json.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,11 +43,11 @@ public class UserController {
      * Writes a list of users to a JSON file.
      *
      * @param users    The list of users to be written to the JSON file.
-     * @param fileName The name of the JSON file where the user data will be written.
+     * @param outputFileName The name of the JSON file where the user data will be written.
      */
-    protected static void writeJsonToFile(List<User> users, String fileName) {
+    protected static void writeJsonToFile(List<User> users, String outputFileName) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter(fileName)) {
+        try (FileWriter writer = new FileWriter(outputFileName)) {
             gson.toJson(users, writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,15 +57,31 @@ public class UserController {
     /**
      * Reads a list of users from a JSON file.
      *
-     * @param fileName The name of the JSON file from which the user data will be read.
+     * @param inputFileName The name of the JSON file from which the user data will be read.
      * @return A list of users read from the JSON file.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    protected static List<User> readJsonFromFile(String fileName) throws IOException {
+    protected static List<User> readJsonFromFile(String inputFileName) throws IOException {
         Gson gson = new Gson();
-        try (FileReader reader = new FileReader(fileName)) {
+        try (FileReader reader = new FileReader(inputFileName)) {
             User[] usersArray = gson.fromJson(reader, User[].class);
             return Arrays.asList(usersArray);
+        }
+    }
+
+    /**
+     * Reads a list of users from a JSON file and writes them to a text file in a specific format.
+     *
+     * @param inputFileName  The name of the JSON file from which the user data will be read.
+     * @param outputFileName The name of the text file where the user data will be written.
+     * @throws IOException If an I/O error occurs while reading or writing the files.
+     */
+    public static void writeUserToFile(String inputFileName, String outputFileName) throws IOException {
+        List<User> users = readJsonFromFile(inputFileName);
+        try (FileWriter writer = new FileWriter(outputFileName)) {
+            for (User user : users) {
+                writer.write(user.getName() + " " + user.getAge() + "\n");
+            }
         }
     }
 
