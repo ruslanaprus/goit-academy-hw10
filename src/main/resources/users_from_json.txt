@@ -9,4 +9,3 @@ heidi 42
 ivan 32
 judy 16
 mark 31
-mark 32

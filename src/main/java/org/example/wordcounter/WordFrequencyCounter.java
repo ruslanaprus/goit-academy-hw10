@@ -23,33 +23,18 @@ import java.util.regex.Pattern;
 public class WordFrequencyCounter {
 
     /**
-     * The main method that orchestrates the reading of words from a file,
-     * calculating their frequencies, sorting by frequency, and writing the results to a file.
-     *
-     * @param args command-line arguments (not used)
-     * @throws IOException if an I/O error occurs
-     */
-    public static void main(String[] args) throws IOException {
-        String filePath = "src/main/resources/words.txt";
-        String frequencyFilePath = "src/main/resources/word_frequency.txt";
-        List<String> words = readWordsFromFile(filePath);
-        Map<String, Integer> frequencyMap = calculateWordFrequency(words);
-        writeResultsToFile(sortByFrequency(frequencyMap), frequencyFilePath);
-    }
-
-    /**
      * Reads words from a specified file and returns them as a list of strings.
      * This method uses a regular expression to match words, which include alphabets, hyphens, and apostrophes.
      *
      * @param filePath the path of the file to read words from
      * @return a list of words read from the file
      */
-    protected static List<String> readWordsFromFile(String filePath) {
+    public static List<String> readWordsFromFile(String filePath) {
         Path path = Path.of(filePath);
         List<String> words = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            final Pattern MATCH_ALL_WORDS = Pattern.compile("([\\w-’']+)");
+            final Pattern MATCH_ALL_WORDS = Pattern.compile("([\\w-’']+)"); // or ([\\p{L}-’']+)
             String line;
             while ((line = reader.readLine()) != null) {
                 Matcher matcher = MATCH_ALL_WORDS.matcher(line.toLowerCase());
@@ -70,7 +55,7 @@ public class WordFrequencyCounter {
      * @param words a list of words for which to calculate the frequency
      * @return a map where keys are words and values are their respective frequencies
      */
-    protected static Map<String, Integer> calculateWordFrequency(List<String> words) {
+    public static Map<String, Integer> calculateWordFrequency(List<String> words) {
         Map<String, Integer> wordFrequencyMap = new TreeMap<>();
         for (String word : words) {
             wordFrequencyMap.put(word, wordFrequencyMap.getOrDefault(word, 0) + 1);
@@ -85,7 +70,7 @@ public class WordFrequencyCounter {
      * @param wordFrequencyMap a map where keys are words and values are their respective frequencies
      * @param filePath         the path of the file to write the results to
      */
-    protected static void writeResultsToFile(Map<String, Integer> wordFrequencyMap, String filePath) {
+    public static void writeResultsToFile(Map<String, Integer> wordFrequencyMap, String filePath) {
         Path path = Path.of(filePath);
 
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
@@ -105,7 +90,7 @@ public class WordFrequencyCounter {
      * @param wordCounts a map where keys are words and values are their respective frequencies
      * @return a sorted map by frequency in descending order
      */
-    protected static Map<String, Integer> sortByFrequency(Map<String, Integer> wordCounts) {
+    public static Map<String, Integer> sortByFrequency(Map<String, Integer> wordCounts) {
         List<Map.Entry<String, Integer>> entries = new ArrayList<>(wordCounts.entrySet());
         Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
             @Override

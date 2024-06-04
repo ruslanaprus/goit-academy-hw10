@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,31 +20,12 @@ import java.util.List;
 public class UserController {
 
     /**
-     * The main method that serves as the entry point of the application.
-     * It reads user data from a text file and writes it to a JSON file.
-     *
-     * @param args Command line arguments (not used in this application).
-     */
-    public static void main(String[] args) {
-        String file = "src/main/resources/users.txt";
-        Path filePath = Paths.get(file);
-
-        try {
-            List<User> users = readUsersFromFile(filePath);
-            writeJsonToFile(users, "src/main/resources/user.json");
-            writeUserToFile("src/main/resources/user.json", "src/main/resources/users_from_json.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Writes a list of users to a JSON file.
      *
      * @param users    The list of users to be written to the JSON file.
      * @param outputFileName The name of the JSON file where the user data will be written.
      */
-    protected static void writeJsonToFile(List<User> users, String outputFileName) {
+    public static void writeJsonToFile(List<User> users, String outputFileName) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter(outputFileName)) {
             gson.toJson(users, writer);
@@ -61,7 +41,7 @@ public class UserController {
      * @return A list of users read from the JSON file.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    protected static List<User> readJsonFromFile(String inputFileName) throws IOException {
+    public static List<User> readJsonFromFile(String inputFileName) throws IOException {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(inputFileName)) {
             User[] usersArray = gson.fromJson(reader, User[].class);
@@ -98,7 +78,6 @@ public class UserController {
         List<User> users = new ArrayList<>();
         try {
             List<String> lines = Files.readAllLines(filePath);
-            // Skip the header
             for (int i = 1; i < lines.size(); i++) {
                 String line = lines.get(i);
                 String[] parts = line.split("\\s+");

@@ -39,11 +39,9 @@ public class NumberHandler {
      * @param filePath the file path where phone numbers are stored
      * @return the singleton instance of NumberHandler
      */
-    public static NumberHandler getInstance(String filePath) {
+    public synchronized static NumberHandler getInstance(String filePath) {
         if (instance == null) {
-            synchronized (NumberHandler.class) {
-                instance = new NumberHandler(filePath);
-            }
+            instance = new NumberHandler(filePath);
         }
         return instance;
     }
